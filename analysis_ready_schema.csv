@@ -1,0 +1,24 @@
+variable,required,source_or_derivation,expected_coding
+id,no,"M2ID (survey and biomarker)","Unique person identifier. Do not include in public output"
+optimism,yes,"6-item LOT-R overall score; MIDUS II variable B1SORIEN (verify codebook)","Numeric 6..30; higher indicates optimism"
+age,yes,"MIDUS II survey",Years
+sex,yes,"MIDUS II survey","0=male; 1=female"
+race,yes,"MIDUS II survey","0=white; 1=non-white"
+education,yes,"MIDUS II survey","1=<HS;2=HS;3=some college;4=college+"
+income,yes,"MIDUS II survey",Household annual income in thousands of USD
+months_between,yes,"survey and biomarker assessment dates",Months between assessments
+chronic,yes,"diagnosed heart disease/hypertension/stroke/diabetes",0=no condition;1=one or more
+bp_meds,yes,"MIDUS II medication information","0=no;1=yes"
+bmi,yes,"MIDUS II measured biomarker height/weight",kg/m^2
+smoking,yes,"MIDUS II survey","1=current;2=past;3=never"
+alcohol,yes,"MIDUS II survey",Average drinks per day in past month
+prudent_diet,yes,"7 components detailed in paper methods",Integer 0..7
+exercise,yes,"MIDUS II exercise question","0=no;1=yes (20 minutes at least 3 times/week)"
+neg_affect,yes,"5-item negative affect score",Average 1..5
+lipid_meds,yes,"MIDUS II use of lipid-lowering medication","0=no;1=yes"
+lipid_dx,yes,"MIDUS II physician-diagnosed cholesterol problems","0=no;1=yes"
+tc,yes,"MIDUS II biomarker",Uncorrected total cholesterol mg/dL
+hdl,yes,"MIDUS II biomarker",Uncorrected HDL cholesterol mg/dL
+ldl,yes,"MIDUS II biomarker",Uncorrected LDL cholesterol mg/dL
+tg,yes,"MIDUS II biomarker",Uncorrected triglycerides mg/dL
+family_id,no,"MIDUS II twin/sibling family group identifier",Optional for GEE. Singletons must use separate group IDs

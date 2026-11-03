@@ -1,0 +1,10 @@
+metric,published_value,notes
+Analysis sample N,990,Complete-case sample
+Low optimism count,334,Optimism 6-22
+Middle optimism count,300,Optimism 23-26
+High optimism count,356,Optimism 27-30
+Optimism mean,23.95,Figure 1
+Optimism SD,4.69,Figure 1
+Mean age,55.12,Results section
+Mean HDL mg/dL,54.08,Results section
+Mean triglycerides mg/dL,135.42,Results section before transformation

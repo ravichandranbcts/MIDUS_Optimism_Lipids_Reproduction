@@ -1,0 +1,9 @@
+measure,model,odds_ratio,lower95,upper95
+Total cholesterol,Model 1,0.89,0.78,1.02
+Total cholesterol,Model 2,0.91,0.79,1.04
+HDL cholesterol,Model 1,0.86,0.75,0.98
+HDL cholesterol,Model 2,0.88,0.76,1.01
+LDL cholesterol,Model 1,0.91,0.79,1.04
+LDL cholesterol,Model 2,0.93,0.81,1.07
+Triglycerides,Model 1,0.87,0.76,1.00
+Triglycerides,Model 2,0.89,0.77,1.03

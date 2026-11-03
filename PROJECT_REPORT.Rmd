@@ -1,0 +1,149 @@
+---
+title: "Reproducibility of 'Relation between Optimism and Lipids in Midlife'"
+subtitle: "Course Final Project — Boehm et al. (2013)"
+author: "[Student name — add before submission]"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    number_sections: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+```
+
+# Reproducibility status
+
+**This is a documented partial reproduction, not a completed numerical replication.** The paper's numerical results below are quoted or transcribed from the publication and labeled **PUBLISHED**; they have not been independently reproduced in this project environment. The R code is supplied for local execution after an authorized MIDUS II dataset is obtained and an accurate analysis-ready dataset has been assembled using the codebooks. Data access restrictions prohibit placing participant-level MIDUS data in this repository or uploading them to public AI services.
+
+# Introduction
+
+The reproducibility of published analyses is essential to transparent quantitative research. Boehm, Williams, Rimm, Ryff, and Kubzansky (2013) examined whether dispositional optimism was associated with serum lipid measures in the Midlife in the United States (MIDUS) cohort. Their analytic sample comprised **990 adults**, and the primary outcomes were total cholesterol, high-density lipoprotein (HDL) cholesterol, low-density lipoprotein (LDL) cholesterol, and triglycerides. The main finding was that greater optimism was associated with higher HDL and modestly lower triglycerides, rather than a broad association with all lipid outcomes [1].
+
+**Objective:** Recreate Figure 1 and Tables 1–5, reproduce the primary and secondary models where source data allow, compare numerical results with published values, and critically assess how reproducible the study is based on available materials.
+
+# Methods
+
+## Sources and access restrictions
+
+MIDUS II Survey data can be obtained through ICPSR study **4652** (2004–2006) and MIDUS II Biomarker Project data through ICPSR study **29282** (2004–2009) [2,3]. They must be joined by the participant identifier **M2ID**. Original MIDUS data may not be redistributed; ICPSR's updated MIDUS terms also bar uploads to public AI platforms [4]. Download and all participant-level processing must therefore be performed locally. The included files contain scripts and published aggregate statistics only.
+
+## Study design and variables
+
+The study used an observational cross-sectional analysis of participants who completed both psychosocial surveys and clinical biomarker assessments, on average about 26 months apart. The 6-item Life Orientation Test-Revised (LOT-R) yielded an optimism score of 6–30 (higher = more optimistic); optimism was standardized for regression. The paper's low, moderate, and high optimism groups corresponded to scores 6–22, 23–26, and 27–30, respectively. Lipid concentrations were assessed from fasting serum samples [1].
+
+Baseline regression models included age, sex, race, education, household income and months between psychosocial and biological assessments. The second model additionally adjusted for chronic conditions and blood-pressure medication. Separate models added smoking, alcohol, exercise, prudent diet and BMI to assess attenuation. The study also considered negative affect and medication-related sensitivity analyses [1].
+
+The original analysis used **SAS 9.2**. This project implements similar procedures in freely available **R**, subject to differences in software defaults, coding, and study release. Medicated lipid values are adjusted by the authors' stated treatment factors (+20% total cholesterol, +35% LDL, +15% triglycerides, −5% HDL); only triglycerides are log transformed. The high-risk logistic models combine medication/physician-diagnosed cholesterol problems with outcome-specific lipid cutpoints [1].
+
+## Reproduction procedure
+
+1. Acquire MIDUS II source files locally, document their exact versions and consult codebooks.
+2. Merge using M2ID and construct the standardized fields defined in `config/analysis_ready_schema.csv`.
+3. Verify the complete-case sample of **990**, three optimism group sizes of **334/300/356**, and source variable scales.
+4. Execute the commented pipeline in `R/run_analysis.R`, which produces Figure 1, Tables 1–5, model summaries and sensitivity checks; inspect the outputs and record discrepancies.
+5. Use published values for comparison **only**; do not treat a transcription as an independently reproduced finding.
+
+```{r run-reproduction, echo=TRUE}
+# All calculations below require an authorized local file.
+if (file.exists("data/private/analysis_ready.csv")) {
+  source("R/run_analysis.R")
+} else {
+  cat("No authorized MIDUS analysis file was provided; numerical reproduction PENDING.\n")
+}
+```
+
+# Results
+
+## Published benchmark findings (NOT independent reproductions)
+
+The publication reported mean age **55.12 years**, with **45% men** and **93% white participants**. Average optimism was **23.95** (SD **4.69**). Its regression estimates for a 1-SD increase in optimism are reproduced below solely to establish targets against which an independently computed analysis could later be checked [1].
+
+```{r paper-benchmark-t3, echo=TRUE}
+# Numerical values in reference/ are from the PUBLISHED PAPER, not new calculations.
+knitr::kable(read.csv("reference/published_table3.csv"),
+             caption = "PUBLISHED Table 3 benchmarks (not a reproduction)")
+```
+
+The strongest primary findings were the model-2 **HDL coefficient 1.21 mg/dL** (95% CI 0.18 to 2.25) and a small inverse log-triglyceride estimate. There was no convincing association with total or LDL cholesterol. The authors reported that adding prudent diet and BMI appreciably reduced the optimism coefficient; with all pathway candidates, attenuation was about 52% for HDL and 54% for triglycerides [1].
+
+```{r paper-benchmark-t4-t5, echo=TRUE}
+knitr::kable(read.csv("reference/published_table4.csv"),
+             caption = "PUBLISHED Table 4 pathway-attenuation benchmarks (not a reproduction)")
+knitr::kable(read.csv("reference/published_table5.csv"),
+             caption = "PUBLISHED Table 5 odds-ratio benchmarks (not a reproduction)")
+```
+
+## Local numerical reproduction — Figure 1 and Tables 1–5
+
+The following chunks display outputs **only if** the R script has been executed on authorized, complete, locally held MIDUS data. If no such data exist, they will explicitly indicate that reproduction is pending.
+
+```{r locally-reproduced-figure, echo=TRUE, fig.align='center'}
+fig_path <- "figures/Figure1_optimism_frequency.png"
+if (file.exists(fig_path)) {
+  knitr::include_graphics(fig_path)
+} else {
+  cat("Figure 1: NOT YET REPRODUCED; requires local input.\n")
+}
+```
+
+```{r local-tables, echo=TRUE}
+for (i in 1:5) {
+  p <- sprintf("tables/Table%d_reproduced.csv", i)
+  if (file.exists(p)) {
+    cat(sprintf("\n### Table %d — locally computed\n", i))
+    print(knitr::kable(read.csv(p), caption = sprintf("Calculated Table %d", i)))
+  } else {
+    cat(sprintf("\nTable %d: NOT YET REPRODUCED.\n", i))
+  }
+}
+```
+
+```{r validation-log, echo=TRUE}
+if (file.exists("logs/analysis_validation.txt")) {
+  cat(readLines("logs/analysis_validation.txt"), sep="\n")
+} else {
+  cat("No local sample validation completed.\n")
+}
+```
+
+## Sensitivity and secondary results
+
+The publication also reported variants that excluded participants taking cholesterol medication, used uncorrected lipid outcomes, included lipid-medication covariates, assessed negative affect, examined race interactions and accounted for twin/sibling clustering using generalized estimating equations (GEE). The included R pipeline implements several of these checks; a family-cluster GEE is conditional on having a genuine family ID. Because exact subgroup exclusions and details of some variables are not fully specified, exact reproduction cannot yet be claimed [1].
+
+# Discussion and critique of reproducibility
+
+**1. Are the data publicly available?** Yes. MIDUS II survey and biomarker public-use datasets are available through ICPSR, with conditions of use. Public availability does not imply permission to redistribute data. The data must be obtained from authorized archives [2–4].
+
+**2. Are they easy to access?** Moderately. The sources are discoverable but involve multiple project datasets, codebooks, possible sign-in or terms acceptance, and merging on M2ID. Obtaining the exact analytic sample is less straightforward than downloading a single rectangular CSV [2,3].
+
+**3. Are codebooks or data organization instructions available?** Yes. ICPSR provides variable labels, codebooks, project-level documentation, MIDUS scales and naming conventions. Multiple releases and original/derived measures still require careful cross-checking [2,3].
+
+**4. Are file names intuitive?** Partly. Study numbers and project identifiers are systematic for archival work, but not self-explanatory to new users. A clearer figure/table-to-input manifest would improve accessibility.
+
+**5. Are variable names intuitive?** Partly. The codebook offers meaningful labels, yet raw names such as the MIDUS II optimism composite `B1SORIEN` are not obvious without supporting documentation. Constructed indices such as prudent diet must be recreated carefully.
+
+**6. Is the software publicly available?** The original researchers reported SAS 9.2, a proprietary licensed package; it is not free open-source software. Similar regressions can be implemented with publicly available R, though identical defaults and historical environment cannot be assumed [1].
+
+**7. Is the code well commented?** The article explains statistical techniques, but I did not locate a publicly provided, executable and commented end-to-end SAS analysis program with the article. Therefore the original code's commenting quality cannot be audited. This repository supplies a commented R implementation, but that is independently authored, not the authors' original code.
+
+**8. Is a toy example provided?** I found no runnable toy example alongside the article. `R/toy_example.R` demonstrates the general model using synthetic observations; it does not reproduce MIDUS results.
+
+**9. Can the figures, tables and reported results be reproduced?** The paper clearly provides one figure and five tables as comparison targets. However, the independent numerical reproduction is **not yet complete**: an authorized, accurately recoded local MIDUS extract must be prepared and analyzed. Thus I cannot presently claim that exact Figure 1, Tables 1–5, or secondary estimates have been reproduced. The scripts and comparison files make the remaining verification steps explicit.
+
+**10. What should have been clearer?** I would request the precise version of each MIDUS project, source variable-to-analysis-variable mapping, 990-person exclusion flow, item-level construction of behavioral scales, full medication classifications, time-between-assessments calculation, and the exact SAS code with session versions. A machine-readable run manifest and scripts would greatly reduce ambiguity.
+
+**11. Were there methodological limitations?** The central limitation is observational data: temporally separated measures and cross-sectional associations do not establish whether optimism affects lipids causally. Selection into the biomarker subsample and complete-case restriction may bias estimates; the sample (about 93% white) also limits generalizability. The deterministic lipid-medication correction is a useful sensitivity strategy but depends on assumed typical treatment effects. Further research could apply inverse probability weighting for selection, multiple imputation for missingness, robust/clustered standard errors for family clusters, medication sensitivity bounds, multiple-testing corrections across outcomes, and a pre-specified framework for separating confounding from possible mediators. Such extensions are not automatically faithful reproductions; they would be labeled new sensitivity analyses [1].
+
+# Conclusion
+
+This study provides evidence of a modest association between optimism and more favorable HDL cholesterol and triglyceride levels, with attenuation after accounting for some health behaviors and BMI. The paper's public-data infrastructure and methodological description are strengths, but **the reproduction package cannot currently validate the original numerical claims** without locally obtaining and accurately harmonizing MIDUS II data. Completing and documenting that local run is necessary before submitting the project as a finished reproducibility analysis.
+
+# References
+
+1. Boehm, J. K., Williams, D. R., Rimm, E. B., Ryff, C., & Kubzansky, L. D. (2013). Relation between optimism and lipids in midlife. *American Journal of Cardiology, 111*(10), 1425–1431. https://doi.org/10.1016/j.amjcard.2013.01.292. Open manuscript: https://pmc.ncbi.nlm.nih.gov/articles/PMC3644345/.
+2. Ryff et al. MIDUS 2 (2004–2006), ICPSR 4652. https://www.icpsr.umich.edu/web/NACDA/studies/4652.
+3. Ryff, Seeman & Weinstein. MIDUS 2 Biomarker (2004–2009), ICPSR 29282. https://www.icpsr.umich.edu/web/NACDA/studies/29282.
+4. MIDUS Open Science Policy, University of Wisconsin-Madison. https://midus.wisc.edu/data/.

@@ -1,0 +1,23 @@
+# MIDUS data: restricted redistribution; keep private
+/data/private/
+/data/raw/
+*.sav
+*.dta
+*.sas7bdat
+*.rds
+*.RData
+*.Rdata
+*.xlsx
+*.zip
+# generated artifacts / machine-specific
+/figures/*
+/tables/*
+/logs/*
+*.html
+*.pdf
+.Rproj.user/
+.Rhistory
+.RData
+!figures/.gitkeep
+!tables/.gitkeep
+!logs/.gitkeep

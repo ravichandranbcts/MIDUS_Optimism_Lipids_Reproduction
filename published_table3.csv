@@ -1,0 +1,9 @@
+measure,model,estimate,lower95,upper95
+Total cholesterol,Model 1,-0.64,-3.11,1.83
+Total cholesterol,Model 2,-0.61,-3.09,1.86
+HDL cholesterol,Model 1,1.32,0.28,2.37
+HDL cholesterol,Model 2,1.21,0.18,2.25
+LDL cholesterol,Model 1,-1.18,-3.47,1.11
+LDL cholesterol,Model 2,-1.18,-3.48,1.11
+Log triglycerides,Model 1,-0.03,-0.07,0.0009
+Log triglycerides,Model 2,-0.03,-0.06,0.005

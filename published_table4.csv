@@ -1,0 +1,8 @@
+model,hdl_b,hdl_se,hdl_change_pct,tg_b,tg_se,tg_change_pct
+Demographics,1.32,0.53,NA,-0.03,0.02,NA
+Plus prudent diet,0.86,0.53,-35,-0.02,0.02,-32
+Plus exercise,1.21,0.53,-9,-0.03,0.02,-10
+Plus smoking,1.17,0.54,-12,-0.03,0.02,0.2
+Plus alcohol,1.39,0.53,6,-0.03,0.02,-4
+Plus BMI,1.12,0.50,-15,-0.03,0.02,-21
+Plus all pathways,0.64,0.50,-52,-0.01,0.02,-54
